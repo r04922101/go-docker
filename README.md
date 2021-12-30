@@ -6,7 +6,7 @@ A walkthrough of building Golang Docker image improvement
 
 We start from the simplest example code and Dockerfile, check the code snippets: [Source code](./simple/main.go) \
 This source code can be easily build by running the command `go build -v -o ./out/main ./src/simple/main.go` \
-Also the build can be achieved by use the following Dockerfile: [Dockerfile](./dockerfiles/simple.Dockerfile) \
+Also the build can be achieved by using the following Dockerfile: [Dockerfile](./dockerfiles/simple.Dockerfile) \
 Run `docker build --progress=plain -f ./dockerfiles/simple.Dockerfile -t go-docker-simple .`
 
 ## Multi-stage Build
@@ -33,3 +33,17 @@ go-docker-multi-stage                latest                   f8ba5b915c94   Abo
 By default, `docker build` command passes everything in the context directory to the builder. \
 To increase the build's performance, add a `.dockerignore` to the context directory to exclude files and directories. \
 For example, in my [.dockerignore](./dockerignore) excludes `.git` directory and compiled output binary files in `out` directory.
+
+## Dependencies
+
+We use [Go modules](https://go.dev/blog/using-go-modules) to manage dependencies. \
+In [dependecies.Dockerfile](./dockerfiles/dependecies.Dockerfile), we copy `go.mod` and `go.sum` before copying other files \
+so that Docker will use the module downloaded intermediate image cache if the `go.mod` and `go.sum` files are not changed.
+
+## Docker Buildkit
+
+Enable BuildKit builds by setting `DOCKER_BUILDKIT=1` environment variable when executing `docker build` command. \
+Besides, set Dockerfile version to 1.2. by adding `# syntax=docker/dockerfile:1.3` at the top of dockerfile. \
+Docker buildkit allows the build container to cache directories for compilers and package managers by adding `--mount=type=cache` to `RUN` command in Dockerfiles. \
+As shown in [buildkit.Dockerfile](./dockerfiles/buildkit.Dockerfile), we mount a cache to `GOMODCACHE` directory, which is the directory where the go command stores downloaded module files. \
+By doing so, we can spare a lot of time for re-downloading packages for every builds.

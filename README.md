@@ -36,7 +36,7 @@ For example, in my [.dockerignore](./dockerignore) excludes `.git` directory and
 
 ## Dependencies
 
-We use [Go modules](https://go.dev/blog/using-go-modules) to manage dependencies. \
+We add some dependencies to our [source code](./dependencies/main.go), and use [Go modules](https://go.dev/blog/using-go-modules) to manage dependencies. \
 In [dependecies.Dockerfile](./dockerfiles/dependecies.Dockerfile), we copy `go.mod` and `go.sum` before copying other files \
 so that Docker will use the module downloaded intermediate image cache if the `go.mod` and `go.sum` files are not changed.
 
@@ -47,3 +47,16 @@ Besides, set Dockerfile version to 1.2. by adding `# syntax=docker/dockerfile:1.
 Docker buildkit allows the build container to cache directories for compilers and package managers by adding `--mount=type=cache` to `RUN` command in Dockerfiles. \
 As shown in [buildkit.Dockerfile](./dockerfiles/buildkit.Dockerfile), we mount a cache to `GOMODCACHE` directory, which is the directory where the go command stores downloaded module files. \
 By doing so, we can spare a lot of time for re-downloading packages for every builds.
+
+## Mount Context, GOCACHE, and GOMODCACHE
+
+In the above section, we mount `GOMODCACHE` to avoid downloading packages for every builds. \
+Aside from that, we can also mount `docker build context` and `GOCACHE` to the builder. \
+In previous shown dockerfiles, we do not really need to keep Go source code files in the images, but just need to compile them. \
+
+1. By adding `--mount=target=.` flag to mount the `docker build context` to the builder, we can not only save an intermediate image layer doing `COPY` command.
+2. We can set `--mount=type=cache,target=/root/.cache/go-build` flag to `RUN go build` command to mount the build cache, which contains compiled packages and other build artifacts, to Go's compiler cache folder. \
+By doing so, we don't need to rebuild every earlier-compiled packages.
+3. Set `--mount=type=cache,target=/go/pkg/mod` flag to `RUN go build` command to mount the mod cahce.
+
+Check [final.Dockerfile](./final.Dockerfile) for the final version of dockerfile.

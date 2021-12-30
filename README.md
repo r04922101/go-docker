@@ -5,7 +5,7 @@ A walkthrough of building Golang Docker image improvement
 ## Simplest
 
 We start from the simplest example code and Dockerfile, check the code snippets: [Source code](./simple/main.go) \
-This source code can be easily build by running the command `go build -v -o ./simple/main ./simple/main.go` \
+This source code can be easily build by running the command `go build -v -o ./out/main ./src/simple/main.go` \
 Also the build can be achieved by use the following Dockerfile: [Dockerfile](./dockerfiles/simple.Dockerfile) \
 Run `docker build --progress=plain -f ./dockerfiles/simple.Dockerfile -t go-docker-simple .`
 
@@ -27,3 +27,9 @@ Check the final image size by running `docker images | grep go-docker`, and the 
 go-docker-simple                     latest                   b31fe5c7bca1   54 seconds ago      317MB
 go-docker-multi-stage                latest                   f8ba5b915c94   About an hour ago   7.35MB
 ```
+
+## .dockerignore
+
+By default, `docker build` command passes everything in the context directory to the builder. \
+To increase the build's performance, add a `.dockerignore` to the context directory to exclude files and directories. \
+For example, in my [.dockerignore](./dockerignore) excludes `.git` directory and compiled output binary files in `out` directory.

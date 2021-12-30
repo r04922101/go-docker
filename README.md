@@ -60,3 +60,17 @@ By doing so, we don't need to rebuild every earlier-compiled packages.
 3. Set `--mount=type=cache,target=/go/pkg/mod` flag to `RUN go build` command to mount the mod cahce.
 
 Check [final.Dockerfile](./final.Dockerfile) for the final version of dockerfile.
+
+## Conclusion
+
+We begin from a very simple code and dockerfile to the final version. \
+We show how to improve Go Docker building process:
+
+- Multi-stage build
+- .dockerignore
+- Docker buildkit
+  - Mount build context
+  - Mount GOMODCACHE
+  - Mount GOCACHE
+
+Hope this post can help you improve your Go Docker images!

@@ -12,7 +12,7 @@ Run `docker build --progress=plain -f ./dockerfiles/simple.Dockerfile -t go-dock
 ## Multi-stage Build
 
 In order to keep the final image size down, we needed to do some shell script tricks to keep only the artifacts, which would be copied to the final image, and remove all other unnecessary files. \
-Use multi-stage build to simplify this process and still reduce the final image size. \
+Use multi-stage build to simplify this process and still reduce the final image size.
 
 In [multi-stage Dockerfile](./dockerfiles/multi-stage.Dockerfile), we can see 2 `FROM` statements. \
 Each `FROM` statement can use diffrent base, and begins a new stage of the build. \
@@ -52,7 +52,7 @@ By doing so, we can spare a lot of time for re-downloading packages for every bu
 
 In the above section, we mount `GOMODCACHE` to avoid downloading packages for every builds. \
 Aside from that, we can also mount `docker build context` and `GOCACHE` to the builder. \
-In previous shown dockerfiles, we do not really need to keep Go source code files in the images, but just need to compile them. \
+In previous shown dockerfiles, we do not really need to keep Go source code files in the images, but just need to compile them.
 
 1. By adding `--mount=target=.` flag to mount the `docker build context` to the builder, we can not only save an intermediate image layer doing `COPY` command.
 2. We can set `--mount=type=cache,target=/root/.cache/go-build` flag to `RUN go build` command to mount the build cache, which contains compiled packages and other build artifacts, to Go's compiler cache folder. \

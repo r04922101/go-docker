@@ -84,3 +84,11 @@ We show how to improve Go Docker building process:
 - Non-root user
 
 Hope this post can help you improve your Go Docker images!
+
+## References
+
+[Use multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
+[go-env-series](https://www.docker.com/blog/tag/go-env-series/)
+[Dockerfile frontend syntaxes](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md)
+[Processes In Containers Should Not Run As Root](https://medium.com/@mccode/processes-in-containers-should-not-run-as-root-2feae3f0df3b)
+[Module Cache](https://go.dev/ref/mod#module-cache)

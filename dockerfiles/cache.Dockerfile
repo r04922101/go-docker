@@ -11,4 +11,4 @@ RUN --mount=target=. \
 
 FROM alpine
 COPY --from=compiler /go/bin/main /usr/local/bin/main
-ENTRYPOINT ["/usr/local/bin/main"]
+CMD ["/usr/local/bin/main"]

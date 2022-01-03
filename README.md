@@ -59,7 +59,16 @@ In previous shown dockerfiles, we do not really need to keep Go source code file
 By doing so, we don't need to rebuild every earlier-compiled packages.
 3. Set `--mount=type=cache,target=/go/pkg/mod` flag to `RUN go build` command to mount the mod cahce.
 
-Check [final.Dockerfile](./final.Dockerfile) for the final version of dockerfile.
+Check [cahce.Dockerfile](./cahce.Dockerfile) for the cache-enabled version of dockerfile.
+
+## Non-root User
+
+Docker containers typically run as `root` user by default. \
+However, for security issues and following least-privileged principle, we should run our process with minimum amount of privileges. \
+First, create user with known UID and GID.
+Then, use `USER` in dockerfile to set the user to use when running the image as a container. \
+Finally, make sure that the user you just created has access to the files you need. \
+Check [user.Dockerfile](./user.Dockerfile) for details.
 
 ## Conclusion
 
@@ -72,5 +81,6 @@ We show how to improve Go Docker building process:
   - Mount build context
   - Mount GOMODCACHE
   - Mount GOCACHE
+- Non-root user
 
 Hope this post can help you improve your Go Docker images!
